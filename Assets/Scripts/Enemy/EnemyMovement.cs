@@ -30,6 +30,12 @@ public class EnemyMovement : MonoBehaviour
     {
         if(_playerAwarenessController.AwareOfPlayer)
         {
+            //check if the player is in range
+            //get the vector between the player and the enemy position
+            // Vector3 enemyToPlayerVector = _player.position - transform.position;
+            //In calculating a direction, we don't need the magnitude of the vector.
+            //We just want the direction on its own
+            // DirectionToPlayer = enemyToPlayerVector.normalized;
             _targetDirection = _playerAwarenessController.DirectionToPlayer;
         }
         else
@@ -43,10 +49,12 @@ public class EnemyMovement : MonoBehaviour
         {
             return;
         }
-
-        Quaternion targetRotation = Quaternion.LookRotation(transform.forward, _targetDirection);
+        //If there is a target direction,we will calculate the target rotation
+        //We will use Quaternion LookRotation in the same way as we did when rotating the Player.
+        //For the forward direction, we'll supply the current forward direction
+        Quaternion targetRotation = Quaternion.LookRotation(transform.forward,_targetDirection);
         Quaternion rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
-    
+        
         _rigidbody.MoveRotation(rotation);
     }
     private void SetVelocity()
