@@ -45,6 +45,7 @@ public class EnemyMovement : MonoBehaviour
     }
     private void RotateTowardsTarget()
     {
+        
         if(_targetDirection == Vector3.zero)
         {
             return;
@@ -52,10 +53,26 @@ public class EnemyMovement : MonoBehaviour
         //If there is a target direction,we will calculate the target rotation
         //We will use Quaternion LookRotation in the same way as we did when rotating the Player.
         //For the forward direction, we'll supply the current forward direction
-        Quaternion targetRotation = Quaternion.LookRotation(transform.forward,_targetDirection);
-        Quaternion rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
+
+        
+        Quaternion targetRotation = Quaternion.LookRotation(_targetDirection);
+        Quaternion rotation = Quaternion.Slerp(transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
         
         _rigidbody.MoveRotation(rotation);
+        /*
+        Quaternion lookRotation = Quaternion.LookRotation(_targetDirection);
+
+        float time = 0;
+
+        Quaternion initialRotation = transform.rotation;
+        while (time < 1)
+        {
+            transform.rotation = Quaternion.Slerp(initialRotation, lookRotation, time);
+
+            time += Time.deltaTime * 1f;
+
+            return;
+        }*/
     }
     private void SetVelocity()
     {
@@ -65,7 +82,7 @@ public class EnemyMovement : MonoBehaviour
         }
         else
         {
-            _rigidbody.velocity = transform.up * _speed;
+            _rigidbody.velocity = transform.forward * _speed;
         }
     }
 }
